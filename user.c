@@ -1,14 +1,30 @@
 #include "user.h"
 
-int load_file(LOGIN* list[], char* filename){
+int load_file(LOGIN* list[], char* filename){ 
+ //파일이 존재하지 않을때
+  int choice;
   int count=0;
-  FILE *datafile = fopen(filename, "r");
-  while(!feof(datafile)){
-    list[count]=(LOGIN*)malloc(sizeof(LOGIN));
-    fscanf(datafile,"%s %s",list[count]->id,list[count]->password);
+  FILE *datafile;
+  if(0 == access(filename, F_OK)){
+    printf("file exist!\n");
+    datafile = fopen(filename, "r");
+    while(!feof(datafile)){
+      list[count]=(LOGIN*)malloc(sizeof(LOGIN));
+      fscanf(datafile,"%s %s",list[count]->id,list[count]->password);
+      count++;
+    }
+    printf("%d records read!\n",count);
+  }else{
+    //count==0
+    printf("%s file not exist! make anyway? (Yes 1, No 2) >> ", filename);
+    scanf("%d",&choice);
+    if(choice == 1){
+      //파일생성
+      datafile = fopen(filename, "w");
+      printf("> Welcome!!\n");
+    }
     count++;
   }
-  printf("%d records read!\n",count);\
   fclose(datafile);
   return count;
 }
